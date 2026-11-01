@@ -133,11 +133,12 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
 
-  const loadUser = async (): Promise<void> => {
+  const loadUser = async (required = false): Promise<void> => {
     try {
       setUser(await api<User>('/auth/me'));
-    } catch {
+    } catch (error) {
       setUser(null);
+      if (required) throw error;
     } finally {
       setReady(true);
     }
@@ -160,7 +161,7 @@ export default function App() {
   };
 
   if (!ready) return <div className="splash"><Logo s={56} /></div>;
-  if (!user) return <Login onDone={loadUser} />;
+  if (!user) return <Login onDone={() => loadUser(true)} />;
 
   return (
     <Auth.Provider value={{ user }}>

@@ -16,7 +16,7 @@ export async function api<T>(path: string, { method = 'GET', body }: ApiOptions 
   }
 
   if (!response.ok) {
-    let message = 'Something went wrong';
+    let message = `Request failed (${response.status})`;
     try {
       const error: unknown = await response.json();
       if (typeof error === 'string') {
